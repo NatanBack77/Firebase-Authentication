@@ -3,6 +3,7 @@ import admin from "firebase-admin";
 import { initializeApp } from "firebase/app";
 import express from "express";
 
+
 const exp = express();
 
 const firebaseConfig = {
@@ -44,13 +45,19 @@ exp.post("/users", (req, res) => {
 
 exp.get("/users", async (req, res) => {
 	const users = db.collection("users");
-	const getUsers = await users.get();
-	let responseArr = [];
-    
-    getUsers.forEach(doc=>{
-    responseArr.push(doc.data())
-    })
-	res.send(responseArr);
+	let user:any[]=[]
+	const doc = await users.get().then(snapshot=>{
+		snapshot.docs.forEach(doc=>{
+		   user.push(doc.data())
+		})
+	})
+	
+	res.send(user)
+
+
+	
+
+	
 });
 
 exp.listen(3000);
